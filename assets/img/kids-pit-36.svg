@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500" role="img" aria-label="e-offroad Kids Pit 36"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#111823"/><stop offset="1" stop-color="#050608"/></linearGradient></defs>
+<rect width="800" height="500" fill="url(#g)"/>
+<path d="M0 310.0 L144.0 225.0 L256.0 290.0 L400.0 190.0 L560.0 300.0 L680.0 240.0 L800 300.0 V500 H0Z" fill="#0d131c"/>
+<circle cx="656.0" cy="110.0" r="35.0" fill="#3E95FF" opacity=".85"/>
+<path d="M0 420.0 Q200.0 380.0 400.0 410.0 T800 400.0 V500 H0Z" fill="#162030"/><g transform="translate(110 110) scale(0.72)">
+<line x1="380" y1="330" x2="230" y2="360" stroke="#556074" stroke-width="12" stroke-linecap="round"/>
+<line x1="335" y1="250" x2="305" y2="330" stroke="#3E95FF" stroke-width="9" stroke-linecap="round"/>
+<line x1="515" y1="215" x2="560" y2="360" stroke="#d6d6d6" stroke-width="11" stroke-linecap="round"/>
+<polygon points="300,248 480,236 525,322 385,340" fill="#212a37" stroke="#3E95FF" stroke-width="4"/>
+<rect x="365" y="258" width="105" height="62" rx="8" fill="#3E95FF"/>
+<rect x="290" y="220" width="200" height="20" rx="10" fill="#343e4e"/>
+<path d="M470 236 L520 210 L560 222 L530 246Z" fill="#343e4e"/>
+<line x1="495" y1="196" x2="548" y2="190" stroke="#d6d6d6" stroke-width="8" stroke-linecap="round"/>
+<path d="M210 280 Q250 262 300 270" stroke="#343e4e" stroke-width="12" fill="none" stroke-linecap="round"/>
+<circle cx="230" cy="360" r="68" fill="none" stroke="#e6e6e6" stroke-width="15" stroke-dasharray="10 5"/>
+<circle cx="230" cy="360" r="18" fill="#3E95FF"/>
+<circle cx="560" cy="360" r="68" fill="none" stroke="#e6e6e6" stroke-width="15" stroke-dasharray="10 5"/>
+<circle cx="560" cy="360" r="18" fill="#3E95FF"/></g>
+<text x="36" y="62" fill="#fff" font-family="system-ui,Segoe UI,Arial,sans-serif" font-size="34" font-weight="800">e-offroad Kids Pit 36</text>
+<text x="36" y="92" fill="#9fb0c8" font-family="system-ui,Segoe UI,Arial,sans-serif" font-size="17">Ilustracja poglądowa — podmień na zdjęcie WebP</text></svg>

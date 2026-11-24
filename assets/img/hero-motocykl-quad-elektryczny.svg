@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img" aria-label="Motocykl i quad elektryczny w terenie"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#111823"/><stop offset="1" stop-color="#050608"/></linearGradient></defs>
+<rect width="1600" height="900" fill="url(#g)"/>
+<path d="M0 558.0 L288.0 405.0 L512.0 522.0 L800.0 342.0 L1120.0 540.0 L1360.0 432.0 L1600 540.0 V900 H0Z" fill="#0d131c"/>
+<circle cx="1312.0" cy="198.0" r="63.00000000000001" fill="#3E95FF" opacity=".85"/>
+<path d="M0 756.0 Q400.0 684.0 800.0 738.0 T1600 720.0 V900 H0Z" fill="#162030"/>
+<path d="M0 760 Q400 690 800 740 T1600 720 V900 H0Z" fill="#1b2638"/>
+<g transform="translate(620 250) scale(1.25)">
+<line x1="380" y1="330" x2="230" y2="360" stroke="#556074" stroke-width="12" stroke-linecap="round"/>
+<line x1="335" y1="250" x2="305" y2="330" stroke="#3E95FF" stroke-width="9" stroke-linecap="round"/>
+<line x1="515" y1="215" x2="560" y2="360" stroke="#d6d6d6" stroke-width="11" stroke-linecap="round"/>
+<polygon points="300,248 480,236 525,322 385,340" fill="#212a37" stroke="#3E95FF" stroke-width="4"/>
+<rect x="365" y="258" width="105" height="62" rx="8" fill="#3E95FF"/>
+<rect x="290" y="220" width="200" height="20" rx="10" fill="#343e4e"/>
+<path d="M470 236 L520 210 L560 222 L530 246Z" fill="#343e4e"/>
+<line x1="495" y1="196" x2="548" y2="190" stroke="#d6d6d6" stroke-width="8" stroke-linecap="round"/>
+<path d="M210 280 Q250 262 300 270" stroke="#343e4e" stroke-width="12" fill="none" stroke-linecap="round"/>
+<circle cx="230" cy="360" r="68" fill="none" stroke="#e6e6e6" stroke-width="15" stroke-dasharray="10 5"/>
+<circle cx="230" cy="360" r="18" fill="#3E95FF"/>
+<circle cx="560" cy="360" r="68" fill="none" stroke="#e6e6e6" stroke-width="15" stroke-dasharray="10 5"/>
+<circle cx="560" cy="360" r="18" fill="#3E95FF"/></g><g transform="translate(80 370) scale(0.8)">
+<path d="M130 300 Q220 215 320 290 L480 290 Q580 215 670 300 L640 312 L160 312Z" fill="#212a37" stroke="#ffffff" stroke-width="4"/>
+<rect x="300" y="245" width="210" height="55" rx="10" fill="#ffffff"/>
+<rect x="290" y="222" width="170" height="24" rx="12" fill="#343e4e"/>
+<line x1="500" y1="250" x2="530" y2="185" stroke="#d6d6d6" stroke-width="10" stroke-linecap="round"/>
+<line x1="500" y1="182" x2="565" y2="185" stroke="#d6d6d6" stroke-width="9" stroke-linecap="round"/>
+<rect x="140" y="265" width="120" height="14" rx="5" fill="#556074"/>
+<circle cx="225" cy="360" r="75" fill="#141a24" stroke="#e6e6e6" stroke-width="16" stroke-dasharray="14 6"/>
+<circle cx="225" cy="360" r="24" fill="#ffffff"/>
+<circle cx="580" cy="360" r="75" fill="#141a24" stroke="#e6e6e6" stroke-width="16" stroke-dasharray="14 6"/>
+<circle cx="580" cy="360" r="24" fill="#ffffff"/></g></svg>
