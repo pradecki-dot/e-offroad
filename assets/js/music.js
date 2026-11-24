@@ -5,7 +5,8 @@
   var btn=document.querySelector('[data-music]'); if(!btn) return;
   var tracks=(btn.getAttribute('data-tracks')||'').split('|').filter(Boolean); if(!tracks.length) return;
   var MLS={pl:['Włącz muzykę w tle','Wyłącz muzykę w tle'],en:['Play background music','Stop background music'],
-    de:['Hintergrundmusik einschalten','Hintergrundmusik ausschalten'],fr:['Activer la musique de fond','Couper la musique de fond']};
+    de:['Hintergrundmusik einschalten','Hintergrundmusik ausschalten'],fr:['Activer la musique de fond','Couper la musique de fond'],
+    zh:['播放背景音乐','关闭背景音乐']};
   var ML=MLS[(document.documentElement.lang||'pl').slice(0,2).toLowerCase()]||MLS.pl;
   var FADE=5, VOL=0.25, idx=0, on=false, fading=false;
   var a=[new Audio(),new Audio()], cur=0;           // dwa odtwarzacze: bieżący i następny (do przenikania)

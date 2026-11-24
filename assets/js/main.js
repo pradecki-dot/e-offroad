@@ -14,9 +14,11 @@ if(!ev.target.open)return;f.querySelectorAll('details[open]').forEach(function(d
 (function(){var gal=document.querySelector('.pd-gal');
 var salon=document.querySelector('#salon');
 var rodzina=document.querySelector('#rodzina');
-if(!gal&&!salon&&!rodzina)return;
+var czesci=document.querySelector('#czesci-tabela');
+if(!gal&&!salon&&!rodzina&&!czesci)return;
 var LT={pl:['Galeria zdjęć','Zamknij galerię','Poprzednie zdjęcie','Następne zdjęcie'],en:['Photo gallery','Close gallery','Previous photo','Next photo'],
-de:['Bildergalerie','Galerie schließen','Vorheriges Bild','Nächstes Bild'],fr:['Galerie photos','Fermer la galerie','Photo précédente','Photo suivante']};
+de:['Bildergalerie','Galerie schließen','Vorheriges Bild','Nächstes Bild'],fr:['Galerie photos','Fermer la galerie','Photo précédente','Photo suivante'],
+zh:['图片库','关闭图库','上一张','下一张']};
 var T=LT[(document.documentElement.lang||'pl').slice(0,2).toLowerCase()]||LT.pl;
 var box=document.createElement('div');box.className='lb';box.hidden=true;box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-label',T[0]);
 box.innerHTML='<button type="button" class="lb-close" aria-label="'+T[1]+'">×</button><figure class="lb-fig"><img class="lb-img" alt=""><span class="lb-photo-label" hidden></span><span class="lb-zone lb-prev" aria-hidden="true" title="'+T[2]+'">‹</span><span class="lb-zone lb-next" aria-hidden="true" title="'+T[3]+'">›</span></figure><p class="lb-count" aria-live="polite"></p>';
@@ -39,6 +41,7 @@ if(ev.target.closest('.pd-main img')){open(list(),main.getAttribute('src'))}});
 if(main)main.style.cursor='zoom-in';}
 bind(salon,'.salon-lead a, .salon-grid a');
 bind(rodzina,'.rodzina-grid a');
+bind(czesci,'a.part-lb');
 box.addEventListener('click',function(ev){if(ev.target.closest('.lb-close'))return;show(i+(ev.clientX<window.innerWidth/2?-1:1))});
 cls.addEventListener('click',close);
 document.addEventListener('keydown',function(ev){if(box.hidden)return;if(ev.key==='Escape')close();else if(ev.key==='ArrowLeft')show(i-1);else if(ev.key==='ArrowRight')show(i+1)});

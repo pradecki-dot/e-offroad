@@ -4,8 +4,10 @@ ErrorDocument 404 /404.html
 
 # 301 — stare adresy po zmianie struktury kategorii (listopad 2026)
 <IfModule mod_alias.c>
-  RedirectMatch 301 ^/e-enduro(/.*)?$ /motocykle-elektryczne-terenowe/enduro/
-  RedirectMatch 301 ^/hard-enduro-elektryczny(/.*)?$ /motocykle-elektryczne-terenowe/enduro/
+  RedirectMatch 301 ^/e-enduro(/.*)?$ /motocykle-elektryczne-terenowe/cross-i-enduro/
+  RedirectMatch 301 ^/hard-enduro-elektryczny(/.*)?$ /motocykle-elektryczne-terenowe/cross-i-enduro/
+  # scalenie Cross + Enduro -> Cross i Enduro (listopad 2026), wszystkie wersje językowe
+  RedirectMatch 301 ^/(en/|de/|fr/|zh/)?motocykle-elektryczne-terenowe/(cross|enduro)/?(index\.html)?$ /$1motocykle-elektryczne-terenowe/cross-i-enduro/
   RedirectMatch 301 ^/quady-elektryczne(/.*)?$ /quady-atv/quady/
   RedirectMatch 301 ^/quad-enduro-elektryczny(/.*)?$ /quady-atv/quady/
   RedirectMatch 301 ^/motocykle-elektryczne-dla-dzieci(/.*)?$ /motocykle-elektryczne-terenowe/dla-dzieci/
@@ -14,6 +16,8 @@ AddDefaultCharset UTF-8
 AddType image/svg+xml .svg
 AddType image/webp .webp
 AddType application/manifest+json .webmanifest
+
+# /api/kursy.php — dzienne kursy NBP (PHP), ustawienia w /api/.htaccess
 
 # Wymuszenie HTTPS i domeny bez www (odkomentuj po podpięciu SSL)
 # RewriteEngine On
@@ -34,6 +38,7 @@ AddType application/manifest+json .webmanifest
   ExpiresByType image/svg+xml "access plus 6 months"
   ExpiresByType image/webp "access plus 6 months"
   ExpiresByType image/png "access plus 6 months"
+  ExpiresByType application/json "access plus 1 hour"
 </IfModule>
 
 <IfModule mod_headers.c>
