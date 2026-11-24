@@ -32,9 +32,9 @@
 <link rel="apple-touch-icon" href="/assets/img/brand/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/lexend.woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/style.css?v=20261120-i18n">
+<link rel="stylesheet" href="/assets/css/style.css?v=20261124-zamowienie">
 <script src="/assets/js/main.js?v=20261124-pln" defer></script>
-<script src="/assets/js/cart.js?v=20261124-pln" defer></script>
+<script src="/assets/js/cart.js?v=20261124-zamowienie" defer></script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://e-offroad.com/en/"}, {"@type": "ListItem", "position": 2, "name": "Cart", "item": "https://e-offroad.com/en/koszyk/"}]}</script>
 </head>
 <body class="v-8">
@@ -56,8 +56,8 @@
 <aside class="cart-sum card pad" aria-labelledby="sum-h"><h2 id="sum-h">Summary</h2>
 <dl><div><dt>Number of items</dt><dd id="cart-count">0</dd></div><div><dt>Subtotal</dt><dd id="cart-subtotal"><span class="cena" data-cena="0" data-baza="PLN">€0</span></dd></div>
 <div><dt>Delivery</dt><dd>quoted individually</dd></div><div class="total"><dt>Total</dt><dd id="cart-total"><span class="cena" data-cena="0" data-baza="PLN">€0</span></dd></div></dl>
-<p><a id="cart-checkout" class="btn wide" href="mailto:info@e-offroad.com">Send order enquiry</a></p>
-<p class="note">This is not yet an order with payment. The button opens an e-mail to the shop with your product list, and we will reply confirming availability and delivery costs. Online payments will be available once the shop engine is in place.</p>
+<p><button type="button" id="cart-order" class="btn wide">Place order</button></p>
+<p class="note">Order straight from the cart: enter your details and delivery address and pay by bank transfer (PLN or EUR). After placing the order you will see your order number and the bank transfer details. We will confirm any delivery cost by e-mail.</p>
 <p><button type="button" id="cart-clear" class="btn ghost wide">Clear cart</button></p></aside>
 </div></div>
 </main>

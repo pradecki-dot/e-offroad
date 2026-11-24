@@ -253,8 +253,12 @@
     var body = L.hello +
       items.map(function (i) { return '- ' + i.name + ' × ' + i.qty + ' = ' + fmt.format(unit(i) * i.qty, i.dec); }).join('\n') +
       '\n\n' + L.total + fmt.format(sum, sd) + '\n\n' + L.form;
-    document.getElementById('cart-checkout').href = 'mailto:' + root.dataset.email +
-      '?subject=' + encodeURIComponent(L.subject) + '&body=' + encodeURIComponent(body);
+    var co = document.getElementById('cart-checkout');
+    if (co) co.href = 'mailto:' + root.dataset.email + '?subject=' + encodeURIComponent(L.subject) + '&body=' + encodeURIComponent(body);
+    var cd = document.getElementById('co-done');
+    if (cd && !cd.hidden) { empty.hidden = true; full.hidden = true; }
+    var cw = document.getElementById('co-wrap');
+    if (cw && !cw.hidden) { if (!items.length) cw.hidden = true; else { full.hidden = true; updAmount(); } }
   }
   function change(id, act) {
     var items = load(), idx = -1;
@@ -267,6 +271,182 @@
     var line = document.querySelector('.cart-line[data-id="' + (window.CSS && CSS.escape ? CSS.escape(id) : id) + '"] [data-act="' + act + '"]');
     if (line) line.focus(); else { var h = document.querySelector('main h1'); if (h) { h.tabIndex = -1; h.focus(); } }
   }
+
+  // ----- zamówienie z płatnością przelewem (strona /koszyk/) -----
+  var CO = {
+    pl: { order: 'Realizuj zamówienie', h: 'Dane do zamówienia', name: 'Imię i nazwisko', email: 'E-mail', phone: 'Telefon', street: 'Ulica i numer domu / mieszkania',
+          zip: 'Kod pocztowy', city: 'Miejscowość', country: 'Kraj', countryDef: 'Polska', company: 'Firma (opcjonalnie)', nip: 'NIP (opcjonalnie)',
+          comment: 'Uwagi do zamówienia (opcjonalnie)', pay: 'Sposób płatności', payPLN: 'Przelew bankowy (PLN)', payEUR: 'Przelew bankowy (EUR)',
+          consent: 'Wyrażam zgodę na przetwarzanie moich danych przez E-OFFROAD SP. Z O.O. w celu realizacji zamówienia.', req: 'pole wymagane',
+          submit: 'Zamawiam i płacę przelewem', back: '← Wróć do koszyka', sending: 'Wysyłanie…', amountL: 'Do zapłaty',
+          ship: 'Kwota obejmuje produkty. Koszt dostawy (jeśli dotyczy) potwierdzimy e-mailem.', thanks: 'Dziękujemy! Zamówienie zostało przyjęte.',
+          orderNo: 'Numer zamówienia', transfer: 'Dane do przelewu', recipient: 'Odbiorca', account: 'Numer rachunku', bic: 'BIC/SWIFT', title: 'Tytuł przelewu',
+          amount: 'Kwota', nipL: 'NIP', after: 'Po zaksięgowaniu wpłaty potwierdzimy zamówienie i termin dostawy. Pytania: info@e-offroad.com, tel. +48 503 950 134.',
+          err: 'Nie udało się wysłać zamówienia. Spróbuj ponownie albo napisz na info@e-offroad.com lub zadzwoń: +48 503 950 134.',
+          errFields: 'Uzupełnij poprawnie wymagane pola.', print: 'Wydrukuj / zapisz' },
+    en: { order: 'Place order', h: 'Order details', name: 'Full name', email: 'E-mail', phone: 'Phone', street: 'Street and house / flat number',
+          zip: 'Postcode', city: 'City', country: 'Country', countryDef: '', company: 'Company (optional)', nip: 'VAT / tax number (optional)',
+          comment: 'Order notes (optional)', pay: 'Payment method', payPLN: 'Bank transfer (PLN)', payEUR: 'Bank transfer (EUR)',
+          consent: 'I agree to E-OFFROAD SP. Z O.O. processing my data in order to fulfil this order.', req: 'required',
+          submit: 'Order and pay by bank transfer', back: '← Back to cart', sending: 'Sending…', amountL: 'Amount to pay',
+          ship: 'The amount covers the products. We will confirm any delivery cost by e-mail.', thanks: 'Thank you! Your order has been received.',
+          orderNo: 'Order number', transfer: 'Bank transfer details', recipient: 'Recipient', account: 'Account number', bic: 'BIC/SWIFT', title: 'Payment reference',
+          amount: 'Amount', nipL: 'Tax ID (NIP)', after: 'Once the payment is received we will confirm the order and delivery date. Questions: info@e-offroad.com, +48 503 950 134.',
+          err: 'The order could not be sent. Please try again or write to info@e-offroad.com or call +48 503 950 134.',
+          errFields: 'Please fill in the required fields correctly.', print: 'Print / save' },
+    de: { order: 'Bestellung abschließen', h: 'Bestelldaten', name: 'Vor- und Nachname', email: 'E-Mail', phone: 'Telefon', street: 'Straße und Hausnummer',
+          zip: 'Postleitzahl', city: 'Ort', country: 'Land', countryDef: '', company: 'Firma (optional)', nip: 'USt-IdNr. (optional)',
+          comment: 'Anmerkungen zur Bestellung (optional)', pay: 'Zahlungsart', payPLN: 'Banküberweisung (PLN)', payEUR: 'Banküberweisung (EUR)',
+          consent: 'Ich willige ein, dass E-OFFROAD SP. Z O.O. meine Daten zur Abwicklung der Bestellung verarbeitet.', req: 'Pflichtfeld',
+          submit: 'Bestellen und per Überweisung bezahlen', back: '← Zurück zum Warenkorb', sending: 'Wird gesendet…', amountL: 'Zu zahlen',
+          ship: 'Der Betrag umfasst die Produkte. Eventuelle Versandkosten bestätigen wir per E-Mail.', thanks: 'Vielen Dank! Ihre Bestellung ist eingegangen.',
+          orderNo: 'Bestellnummer', transfer: 'Überweisungsdaten', recipient: 'Empfänger', account: 'Kontonummer', bic: 'BIC/SWIFT', title: 'Verwendungszweck',
+          amount: 'Betrag', nipL: 'Steuernummer (NIP)', after: 'Nach Zahlungseingang bestätigen wir die Bestellung und den Liefertermin. Fragen: info@e-offroad.com, +48 503 950 134.',
+          err: 'Die Bestellung konnte nicht gesendet werden. Bitte erneut versuchen oder an info@e-offroad.com schreiben bzw. +48 503 950 134 anrufen.',
+          errFields: 'Bitte füllen Sie die Pflichtfelder korrekt aus.', print: 'Drucken / speichern' },
+    fr: { order: 'Passer la commande', h: 'Informations de commande', name: 'Nom et prénom', email: 'E-mail', phone: 'Téléphone', street: 'Rue et numéro',
+          zip: 'Code postal', city: 'Ville', country: 'Pays', countryDef: '', company: 'Société (facultatif)', nip: 'N° de TVA (facultatif)',
+          comment: 'Remarques sur la commande (facultatif)', pay: 'Mode de paiement', payPLN: 'Virement bancaire (PLN)', payEUR: 'Virement bancaire (EUR)',
+          consent: 'J’accepte que E-OFFROAD SP. Z O.O. traite mes données afin d’exécuter la commande.', req: 'obligatoire',
+          submit: 'Commander et payer par virement', back: '← Retour au panier', sending: 'Envoi…', amountL: 'Montant à payer',
+          ship: 'Le montant couvre les produits. Les éventuels frais de livraison seront confirmés par e-mail.', thanks: 'Merci ! Votre commande a bien été reçue.',
+          orderNo: 'Numéro de commande', transfer: 'Coordonnées bancaires', recipient: 'Bénéficiaire', account: 'Numéro de compte', bic: 'BIC/SWIFT', title: 'Libellé du virement',
+          amount: 'Montant', nipL: 'N° fiscal (NIP)', after: 'Dès réception du paiement, nous confirmerons la commande et la date de livraison. Questions : info@e-offroad.com, +48 503 950 134.',
+          err: 'La commande n’a pas pu être envoyée. Réessayez ou écrivez à info@e-offroad.com, ou appelez le +48 503 950 134.',
+          errFields: 'Veuillez remplir correctement les champs obligatoires.', print: 'Imprimer / enregistrer' },
+    zh: { order: '提交订单', h: '订单信息', name: '姓名', email: '电子邮箱', phone: '电话', street: '街道及门牌号',
+          zip: '邮政编码', city: '城市', country: '国家', countryDef: '', company: '公司（选填）', nip: '税号（选填）',
+          comment: '订单备注（选填）', pay: '付款方式', payPLN: '银行转账（PLN）', payEUR: '银行转账（EUR）',
+          consent: '我同意 E-OFFROAD SP. Z O.O. 为履行订单处理我的个人数据。', req: '必填',
+          submit: '下单并通过银行转账付款', back: '← 返回购物车', sending: '正在发送…', amountL: '应付金额',
+          ship: '金额仅含商品费用，如有运费将通过电子邮件确认。', thanks: '谢谢！我们已收到您的订单。',
+          orderNo: '订单号', transfer: '转账信息', recipient: '收款人', account: '账号', bic: 'BIC/SWIFT', title: '转账附言',
+          amount: '金额', nipL: '税号 (NIP)', after: '收到款项后，我们将确认订单和交货日期。如有疑问：info@e-offroad.com，+48 503 950 134。',
+          err: '订单发送失败。请重试，或发送邮件至 info@e-offroad.com，或致电 +48 503 950 134。',
+          errFields: '请正确填写必填项。', print: '打印 / 保存' }
+  };
+  var C = CO[LANG] || CO.pl;
+  function payCur() { var r = document.querySelector('input[name="co-cur"]:checked'); return r ? r.value : (CUR === 'PLN' ? 'PLN' : 'EUR'); }
+  function payLines(items, cur) {
+    return items.map(function (i) { var u = conv(i.base, i.bcur, cur, i.dec); return { i: i, u: u, t: rnd(u * i.qty, i.dec || cur === 'PLN' && i.bcur !== 'PLN') }; });
+  }
+  function paySum(items, cur) { return payLines(items, cur).reduce(function (s, l) { return s + l.t; }, 0); }
+  function updAmount() {
+    var a = document.getElementById('co-amount'); if (!a) return;
+    var cur = payCur(), items = load(), s = paySum(items, cur);
+    a.textContent = money(s, cur, hasDec(items) || s % 1 ? 1 : 0);
+  }
+  function field(id, label, type, req, full, extra) {
+    var w = el('div', { 'class': 'co-f' + (full ? ' full' : '') });
+    var lb = el('label', { 'for': id }, label + (req ? ' *' : '')); w.appendChild(lb);
+    var inp = type === 'textarea' ? el('textarea', { id: id, name: id, rows: '3' }) : el('input', { id: id, name: id, type: type || 'text' });
+    if (req) { inp.required = true; inp.setAttribute('aria-required', 'true'); }
+    for (var k in (extra || {})) inp.setAttribute(k, extra[k]);
+    w.appendChild(inp); return w;
+  }
+  function buildForm() {
+    var root = document.getElementById('cart-root'); if (!root || document.getElementById('co-form')) return;
+    var sec = el('section', { id: 'co-wrap', 'class': 'co card pad', 'aria-labelledby': 'co-h' }); sec.hidden = true;
+    sec.appendChild(el('h2', { id: 'co-h' }, C.h));
+    var f = el('form', { id: 'co-form', 'class': 'co-form', novalidate: '' });
+    var g = el('div', { 'class': 'co-grid' });
+    g.appendChild(field('co-name', C.name, 'text', 1, 1, { autocomplete: 'name', maxlength: '120' }));
+    g.appendChild(field('co-email', C.email, 'email', 1, 0, { autocomplete: 'email', maxlength: '160' }));
+    g.appendChild(field('co-phone', C.phone, 'tel', 1, 0, { autocomplete: 'tel', maxlength: '40' }));
+    g.appendChild(field('co-street', C.street, 'text', 1, 1, { autocomplete: 'street-address', maxlength: '160' }));
+    g.appendChild(field('co-zip', C.zip, 'text', 1, 0, { autocomplete: 'postal-code', maxlength: '20' }));
+    g.appendChild(field('co-city', C.city, 'text', 1, 0, { autocomplete: 'address-level2', maxlength: '80' }));
+    g.appendChild(field('co-country', C.country, 'text', 1, 1, { autocomplete: 'country-name', maxlength: '60', value: C.countryDef }));
+    g.appendChild(field('co-company', C.company, 'text', 0, 0, { autocomplete: 'organization', maxlength: '160' }));
+    g.appendChild(field('co-nip', C.nip, 'text', 0, 0, { maxlength: '30' }));
+    g.appendChild(field('co-comment', C.comment, 'textarea', 0, 1, { maxlength: '2000' }));
+    f.appendChild(g);
+    var hp = el('div', { 'class': 'co-hp', 'aria-hidden': 'true' }); hp.appendChild(el('input', { type: 'text', name: 'www', id: 'co-www', tabindex: '-1', autocomplete: 'off' })); f.appendChild(hp);
+    var fs = el('fieldset', { 'class': 'co-pay' }); fs.appendChild(el('legend', {}, C.pay));
+    ['PLN', 'EUR'].forEach(function (c) {
+      var l = el('label', { 'class': 'co-radio' }), r = el('input', { type: 'radio', name: 'co-cur', value: c });
+      if ((CUR === 'PLN' ? 'PLN' : 'EUR') === c) r.checked = true;
+      l.appendChild(r); l.appendChild(document.createTextNode(' ' + (c === 'PLN' ? C.payPLN : C.payEUR))); fs.appendChild(l);
+    });
+    var am = el('p', { 'class': 'co-amount' }); am.appendChild(document.createTextNode(C.amountL + (LANG === 'fr' ? ' : ' : LANG === 'zh' ? '：' : ': '))); am.appendChild(el('strong', { id: 'co-amount' }, ''));
+    fs.appendChild(am); fs.appendChild(el('p', { 'class': 'note' }, C.ship)); f.appendChild(fs);
+    var cl = el('label', { 'class': 'co-check' }), cb = el('input', { type: 'checkbox', id: 'co-consent', name: 'consent' }); cb.required = true;
+    cl.appendChild(cb); cl.appendChild(el('span', {}, C.consent + ' *')); f.appendChild(cl);
+    f.appendChild(el('p', { id: 'co-msg', 'class': 'co-err', role: 'alert' }));
+    var act = el('p', { 'class': 'co-actions' });
+    act.appendChild(el('button', { type: 'submit', 'class': 'btn', id: 'co-submit' }, C.submit));
+    act.appendChild(el('button', { type: 'button', 'class': 'btn ghost', id: 'co-back' }, C.back));
+    f.appendChild(act); sec.appendChild(f);
+    var done = el('section', { id: 'co-done', 'class': 'co card pad', tabindex: '-1' }); done.hidden = true;
+    root.appendChild(sec); root.appendChild(done);
+    f.addEventListener('change', function (ev) { if (ev.target.name === 'co-cur') updAmount(); });
+    f.addEventListener('submit', submitOrder);
+  }
+  function showForm(on) {
+    buildForm();
+    var w = document.getElementById('co-wrap'), full = document.getElementById('cart-full');
+    w.hidden = !on; if (full) full.hidden = on || load().length === 0;
+    if (on) { updAmount(); var h = document.getElementById('co-h'); h.tabIndex = -1; h.focus(); }
+  }
+  function val(id) { var e = document.getElementById(id); return e ? e.value.trim() : ''; }
+  function submitOrder(ev) {
+    ev.preventDefault();
+    var f = ev.target, msg = document.getElementById('co-msg'), bad = null;
+    msg.textContent = '';
+    ['co-name', 'co-email', 'co-phone', 'co-street', 'co-zip', 'co-city', 'co-country', 'co-consent'].forEach(function (id) {
+      var e = document.getElementById(id), ok = e.type === 'checkbox' ? e.checked : e.value.trim() !== '' && (e.type !== 'email' || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.value.trim()));
+      e.setAttribute('aria-invalid', ok ? 'false' : 'true'); if (!ok && !bad) bad = e;
+    });
+    if (bad) { msg.textContent = C.errFields; bad.focus(); return; }
+    var items = load(); if (!items.length) return;
+    var cur = payCur(), lines = payLines(items, cur), sum = paySum(items, cur);
+    var dec = hasDec(items) || sum % 1 ? 1 : 0;
+    var data = {
+      lang: LANG, currency: cur, pageCurrency: CUR, amount: Math.round(sum * 100) / 100,
+      pageTotal: fmt.format(total(items), hasDec(items)),
+      items: lines.map(function (l) { return { name: l.i.name, qty: l.i.qty, unit: money(l.u, cur, l.i.dec || l.u % 1 ? 1 : 0), total: money(l.t, cur, l.i.dec || l.t % 1 ? 1 : 0) }; }),
+      customer: { name: val('co-name'), email: val('co-email'), phone: val('co-phone'), street: val('co-street'), zip: val('co-zip'), city: val('co-city'),
+                  country: val('co-country'), company: val('co-company'), nip: val('co-nip'), comment: val('co-comment') },
+      consent: document.getElementById('co-consent').checked, www: val('co-www')
+    };
+    var btn = document.getElementById('co-submit'); btn.disabled = true; btn.textContent = C.sending;
+    var x = new XMLHttpRequest(); x.open('POST', '/api/zamowienie.php', true); x.timeout = 20000;
+    x.setRequestHeader('Content-Type', 'application/json');
+    x.onload = function () {
+      var j = null; try { j = JSON.parse(x.responseText); } catch (e) {}
+      if (x.status === 200 && j && j.ok && j.bank) { showDone(j, dec); save([]); }
+      else { msg.textContent = (j && j.error === 'fields') ? C.errFields : C.err; btn.disabled = false; btn.textContent = C.submit; }
+    };
+    x.onerror = x.ontimeout = function () { msg.textContent = C.err; btn.disabled = false; btn.textContent = C.submit; };
+    x.send(JSON.stringify(data));
+  }
+  function row(dl, k, v) { var d = el('div'); d.appendChild(el('dt', {}, k)); d.appendChild(el('dd', {}, v)); dl.appendChild(d); }
+  function showDone(j, dec) {
+    var d = document.getElementById('co-done'), w = document.getElementById('co-wrap');
+    d.textContent = '';
+    d.appendChild(el('h2', {}, C.thanks));
+    var p = el('p', { 'class': 'co-no' }); p.appendChild(document.createTextNode(C.orderNo + (LANG === 'fr' ? ' : ' : LANG === 'zh' ? '：' : ': '))); p.appendChild(el('strong', {}, j.order)); d.appendChild(p);
+    d.appendChild(el('h3', {}, C.transfer));
+    var dl = el('dl', { 'class': 'co-bank' }), b = j.bank;
+    row(dl, C.recipient, b.recipient + ', ' + b.address);
+    row(dl, C.nipL, b.nip);
+    if (j.currency === 'PLN' && LANG === 'pl' && b.nrb) row(dl, C.account, b.nrb);
+    row(dl, 'IBAN', b.iban);
+    if (LANG !== 'pl' || j.currency !== 'PLN') row(dl, C.bic, b.bic);
+    row(dl, C.title, j.title);
+    row(dl, C.amount, money(j.amount, j.currency, dec));
+    d.appendChild(dl);
+    d.appendChild(el('p', { 'class': 'note' }, C.ship));
+    d.appendChild(el('p', {}, C.after));
+    var pr = el('p'); pr.appendChild(el('button', { type: 'button', 'class': 'btn ghost', id: 'co-print' }, C.print)); d.appendChild(pr);
+    w.hidden = true; d.hidden = false; d.focus();
+    try { sessionStorage.setItem('eoffroad_last_order', JSON.stringify({ j: j, dec: dec })); } catch (e) {}
+  }
+  document.addEventListener('click', function (ev) {
+    if (ev.target.closest('#cart-order')) { showForm(true); return; }
+    if (ev.target.closest('#co-back')) { showForm(false); var o = document.getElementById('cart-order'); if (o) o.focus(); return; }
+    if (ev.target.closest('#co-print')) window.print();
+  });
 
   document.addEventListener('click', function (ev) {
     var b = ev.target.closest('[data-add-to-cart]');

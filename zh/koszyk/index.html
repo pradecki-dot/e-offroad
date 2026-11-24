@@ -32,9 +32,9 @@
 <link rel="apple-touch-icon" href="/assets/img/brand/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/lexend.woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/style.css?v=20261120-i18n"><link rel="stylesheet" href="/assets/css/zh.css?v=20261120-zh">
+<link rel="stylesheet" href="/assets/css/style.css?v=20261124-zamowienie"><link rel="stylesheet" href="/assets/css/zh.css?v=20261120-zh">
 <script src="/assets/js/main.js?v=20261124-pln" defer></script>
-<script src="/assets/js/cart.js?v=20261124-pln" defer></script>
+<script src="/assets/js/cart.js?v=20261124-zamowienie" defer></script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "首页", "item": "https://e-offroad.com/zh/"}, {"@type": "ListItem", "position": 2, "name": "购物车", "item": "https://e-offroad.com/zh/koszyk/"}]}</script>
 </head>
 <body class="v-8">
@@ -56,8 +56,8 @@
 <aside class="cart-sum card pad" aria-labelledby="sum-h"><h2 id="sum-h">订单摘要</h2>
 <dl><div><dt>商品数量</dt><dd id="cart-count">0</dd></div><div><dt>小计</dt><dd id="cart-subtotal"><span class="cena" data-cena="0" data-baza="PLN">US$0</span></dd></div>
 <div><dt>配送</dt><dd>单独报价</dd></div><div class="total"><dt>合计</dt><dd id="cart-total"><span class="cena" data-cena="0" data-baza="PLN">US$0</span></dd></div></dl>
-<p><a id="cart-checkout" class="btn wide" href="mailto:info@e-offroad.com">发送订单询价</a></p>
-<p class="note">这还不是付款订单。点击按钮将打开一封包含商品清单的邮件发送给商店，我们会回复确认库存和配送费用。在线支付将在商店系统上线后提供。</p>
+<p><button type="button" id="cart-order" class="btn wide">提交订单</button></p>
+<p class="note">直接在购物车下单：填写您的信息和收货地址，并通过银行转账（PLN 或 EUR）付款。下单后将显示订单号和转账信息。如有运费，我们将通过电子邮件确认。</p>
 <p><button type="button" id="cart-clear" class="btn ghost wide">清空购物车</button></p></aside>
 </div></div>
 </main>
