@@ -52,13 +52,13 @@
     return rnd(pln / RATES[cur], dec, r);
   }
   function grp(n, sep) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, sep); }
-  // zapis kwot jak w HTML (waluta.py): pl '18 990 zł' / '10 153,25 zł'; en '€1,234'; de '1.234 €'; fr '1 234 €'; zh 'US$1,234'
+  // zapis kwot jak w HTML (waluta.py): pl '18 990 PLN' / '10 153,25 PLN'; en '€1,234'; de '1.234 €'; fr '1 234 €'; zh 'US$1,234'
   function money(v, cur, dec) {
     cur = cur || CUR; var neg = v < 0; v = Math.abs(v);
     var whole = Math.floor(v + 1e-9), frac = dec ? Math.round((v - whole) * 100) : 0;
     if (frac === 100) { whole += 1; frac = 0; }
     var f2 = (frac < 10 ? '0' : '') + frac, s;
-    if (cur === 'PLN') s = grp(whole, '\u00a0') + (dec ? ',' + f2 : '') + '\u00a0zł';
+    if (cur === 'PLN') s = grp(whole, '\u00a0') + (dec ? ',' + f2 : '') + '\u00a0PLN';
     else if (cur === 'USD') s = 'US$' + grp(whole, ',') + (dec ? '.' + f2 : '');
     else if (LANG === 'en') s = '\u20ac' + grp(whole, ',') + (dec ? '.' + f2 : '');
     else s = grp(whole, LANG === 'de' ? '.' : '\u202f') + (dec ? ',' + f2 : '') + '\u00a0\u20ac';
